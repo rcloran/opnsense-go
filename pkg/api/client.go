@@ -80,7 +80,7 @@ func (c *Client) getAuth() string {
 	return base64.StdEncoding.EncodeToString([]byte(auth))
 }
 
-func (c *Client) doRequest(ctx context.Context, method, endpoint string, body any, resp any) error {
+func (c *Client) DoRequest(ctx context.Context, method, endpoint string, body any, resp any) error {
 	// Create IO readers
 	var bodyReader io.Reader
 	if body != nil {
@@ -146,7 +146,7 @@ func (c *Client) ReconfigureService(ctx context.Context, endpoint string) error 
 	respJson := &struct {
 		Status string `json:"status"`
 	}{}
-	err := c.doRequest(ctx, "POST", endpoint, nil, respJson)
+	err := c.DoRequest(ctx, "POST", endpoint, nil, respJson)
 	if err != nil {
 		return err
 	}

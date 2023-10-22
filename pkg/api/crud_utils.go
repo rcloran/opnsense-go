@@ -34,7 +34,7 @@ func set[K any](c *Client, ctx context.Context, opts ReqOpts, resource *K, endpo
 
 	// Make request to OPNsense
 	respJson := &addResp{}
-	err := c.doRequest(ctx, "POST", endpoint, wrapped, respJson)
+	err := c.DoRequest(ctx, "POST", endpoint, wrapped, respJson)
 	if err != nil {
 		return "", err
 	}
@@ -67,7 +67,7 @@ func Get[K any](c *Client, ctx context.Context, opts ReqOpts, resource *K, id st
 	var reqData map[string]json.RawMessage
 
 	// Make request to OPNsense
-	err := c.doRequest(ctx, "GET",
+	err := c.DoRequest(ctx, "GET",
 		fmt.Sprintf("%s/%s", opts.GetEndpoint, id), nil, &reqData)
 
 	// Handle request errors
@@ -82,10 +82,6 @@ func Get[K any](c *Client, ctx context.Context, opts ReqOpts, resource *K, id st
 
 	// Unwrap json
 	err = resourceUnwrap(opts.Monad, resource, reqData)
-	if err != nil {
-		return nil, err
-	}
-
 	// Handle unwrap errors
 	if err != nil {
 		return nil, err
@@ -101,7 +97,7 @@ func Delete(c *Client, ctx context.Context, opts ReqOpts, id string) error {
 	defer GlobalMutexKV.Unlock(clientMutexKey, ctx)
 
 	respJson := &deleteResp{}
-	err := c.doRequest(ctx, "POST", fmt.Sprintf("%s/%s", opts.DeleteEndpoint, id), nil, respJson)
+	err := c.DoRequest(ctx, "POST", fmt.Sprintf("%s/%s", opts.DeleteEndpoint, id), nil, respJson)
 	if err != nil {
 		return err
 	}
